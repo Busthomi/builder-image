@@ -20,6 +20,6 @@ RUN set -ex; \
     docker -v
 
 RUN set -xe && \
-    apk add --no-cache git openssh-client \
+    apk add --no-cache tar git openssh-client \
     pip install awscli boto && \
     true
