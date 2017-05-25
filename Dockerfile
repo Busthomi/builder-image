@@ -23,3 +23,7 @@ RUN set -xe && \
     apk add --no-cache tar git openssh-client && \
     pip install awscli boto && \
     true
+
+RUN set -xe && \
+    apk add --no-cache ansible && \
+    true
