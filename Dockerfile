@@ -21,7 +21,7 @@ RUN set -ex; \
 
 RUN set -xe && \
     apk add --no-cache tar git openssh-client && \
-    pip install awscli boto && \
+    pip install awscli boto yamllint && \
     true
 
 RUN set -xe && \
