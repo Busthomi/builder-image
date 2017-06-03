@@ -28,5 +28,10 @@ RUN set -xe && \
     apk add --no-cache ansible && \
     true
 
+RUN set -xe && \
+    apk add --no-cache make && \
+    true
+
 COPY bin /usr/local/bin
 COPY config.json /root/.docker/config.json
+COPY Makefile /root/Makefile
