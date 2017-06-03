@@ -39,7 +39,7 @@ docker-pull:
 	$(DOCKER) pull ${DOCKER_IMAGE}:${CIRCLE_BRANCH} || true
 .PHONY: docker-pull
 
-docker-image:
+docker-image: docker-pull
 	$(DOCKER) build --cache-from ${DOCKER_IMAGE}:${CIRCLE_BRANCH} \
 		--build-arg GITHUB_TOKEN=${github_token} \
 		--build-arg BUILD_DIRECTORY=${IMAGE_BUILD_DIRECTORY} \
