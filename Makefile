@@ -47,12 +47,12 @@ docker-image: docker-pull
 	$(DOCKER) tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:${CIRCLE_BRANCH}
 	$(DOCKER) inspect --format='{{ .Id }}' ${DOCKER_IMAGE}:${DOCKER_TAG} > docker-image
 
-docker-push: docker-image
+docker-push:
 	$(DOCKER) push ${DOCKER_IMAGE}:${DOCKER_TAG}
 	$(DOCKER) push ${DOCKER_IMAGE}:${CIRCLE_BRANCH}
 .PHONY: docker-push
 
-boot-artifact: docker-image
+boot-artifact:
 	$(DOCKER) create --name ${CIRCLE_PROJECT_REPONAME}-artifact ${DOCKER_IMAGE}:${DOCKER_TAG}
 .PHONY: boot-artifact
 
@@ -63,7 +63,7 @@ artifact: boot-artifact
 	$(TAR) --exclude-vcs -zcf ${LOCAL_TGZ} -C /tmp/build/${CIRCLE_PROJECT_REPONAME}/ .
 .PHONY: artifact
 
-copy-artifact-to-s3: artifact
+copy-artifact-to-s3: 
 	$(AWS) s3 cp "${LOCAL_TGZ}" "s3://${DEPLOY_BUCKET}/${CIRCLE_PROJECT_REPONAME}/${ENV}/"
 
 	# Create pointer files with commit hash and branch references to use with deployments
