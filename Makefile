@@ -15,10 +15,11 @@ else
 	AWS_SECRET_ACCESS_KEY=${test_iam_secret_access_key}
 endif
 
-LOCAL_TGZ=/tmp/artifacts/${CIRCLE_PROJECT_REPONAME}.${CIRCLE_SHA1:0:12}.tgz
-DOCKER_TAG=build-${CIRCLE_SHA1:0:12}
-S3_TGZ="${CIRCLE_PROJECT_REPONAME}/${ENV}/${CIRCLE_PROJECT_REPONAME}.${CIRCLE_SHA1:0:12}.tgz"
-LOCAL_SHA_TXT="${CIRCLE_ARTIFACTS}/${CIRCLE_PROJECT_REPONAME}.${CIRCLE_SHA1:0:12}.txt"
+LOCAL_TGZ=/tmp/artifacts/${CIRCLE_PROJECT_REPONAME}.${SHORT_SHA}.tgz
+SHORT_SHA1 = $(shell echo $(CIRCLE_SHA1) | head -c 12)
+DOCKER_TAG := build-${SHORT_SHA1}
+S3_TGZ="${CIRCLE_PROJECT_REPONAME}/${ENV}/${CIRCLE_PROJECT_REPONAME}.${SHORT_SHA1}.tgz"
+LOCAL_SHA_TXT="${CIRCLE_ARTIFACTS}/${CIRCLE_PROJECT_REPONAME}.${SHORT_SHA1}.txt"
 LOCAL_BRANCH_TXT="${CIRCLE_ARTIFACTS}/${CIRCLE_PROJECT_REPONAME}.${CIRCLE_BRANCH}.txt"
 
 
@@ -39,13 +40,13 @@ docker-pull:
 	$(DOCKER) pull ${DOCKER_IMAGE}:${CIRCLE_BRANCH} || true
 .PHONY: docker-pull
 
-docker-image: docker-pull
-	$(DOCKER) build --cache-from DOCKER_IMAGE:${CIRCLE_BRANCH} \
+docker-image:
+	$(DOCKER) build --cache-from ${DOCKER_IMAGE}:${CIRCLE_BRANCH} \
 		--build-arg GITHUB_TOKEN=${github_token} \
 		--build-arg BUILD_DIRECTORY=${IMAGE_BUILD_DIRECTORY} \
 		-t ${DOCKER_IMAGE}:${DOCKER_TAG} .
 	$(DOCKER) tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:${CIRCLE_BRANCH}
-	$(DOCKER) inspect --format='{{ .Id }}' ${DOCKER_IMAGE}:${DOCKER_TAG} > docker-image
+.PHONY: docker-image
 
 docker-push:
 	$(DOCKER) push ${DOCKER_IMAGE}:${DOCKER_TAG}
@@ -63,7 +64,7 @@ artifact: boot-artifact
 	$(TAR) --exclude-vcs -zcf ${LOCAL_TGZ} -C /tmp/build/${CIRCLE_PROJECT_REPONAME}/ .
 .PHONY: artifact
 
-copy-artifact-to-s3: 
+copy-artifact-to-s3:
 	$(AWS) s3 cp "${LOCAL_TGZ}" "s3://${DEPLOY_BUCKET}/${CIRCLE_PROJECT_REPONAME}/${ENV}/"
 
 	# Create pointer files with commit hash and branch references to use with deployments
