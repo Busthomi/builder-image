@@ -46,6 +46,7 @@ docker-image:
 		--build-arg BUILD_DIRECTORY=${IMAGE_BUILD_DIRECTORY} \
 		-t ${DOCKER_IMAGE}:${DOCKER_TAG} .
 	$(DOCKER) tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:${CIRCLE_BRANCH}
+	$(DOCKER) tag ${DOCKER_IMAGE}:${DOCKER_TAG} test-artifact
 .PHONY: docker-image
 
 docker-push:
@@ -78,3 +79,7 @@ copy-artifact-to-s3:
 	# Upload branch pointer file used in deployment, i.e. cp $foo/unity-product.prod.txt s3://bucket/unity-product/$env/
 	$(AWS) s3 cp "${LOCAL_BRANCH_TXT}" "s3://${DEPLOY_BUCKET}/${CIRCLE_PROJECT_REPONAME}/${ENV}/"
 .PHONY: copy-artifact-to-s3
+
+docker:
+	$(DOCKER)
+.PHONY: docker
