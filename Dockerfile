@@ -3,6 +3,9 @@ FROM python:alpine
 ENV DOCKER_CHANNEL edge
 ENV DOCKER_VERSION 17.05.0-ce
 
+# Python changed their image, this is for backwards compat
+RUN ln -s /usr/local/bin/python /usr/bin/python
+
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
         curl \
