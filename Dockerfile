@@ -1,7 +1,7 @@
 FROM python:3-alpine3.7
 
-ENV DOCKER_CHANNEL edge
-ENV DOCKER_VERSION 17.05.0-ce
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION 18.03.1-ce
 
 # Python changed their image, this is for backwards compat
 RUN ln -s /usr/local/bin/python /usr/bin/python
