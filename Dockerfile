@@ -1,4 +1,4 @@
-FROM python:2-alpine3.6
+FROM python:3-alpine3.7
 
 ENV DOCKER_CHANNEL edge
 ENV DOCKER_VERSION 17.05.0-ce
