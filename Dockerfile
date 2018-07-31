@@ -30,6 +30,3 @@ RUN set -xe && \
 RUN set -xe && \
     apk add --no-cache ansible && \
     true
-
-COPY bin /usr/local/bin
-COPY config.json /root/.docker/config.json
