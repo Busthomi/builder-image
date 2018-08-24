@@ -23,7 +23,7 @@ RUN set -ex; \
     docker -v
 
 RUN set -xe && \
-    apk add --no-cache tar git openssh-client && \
+    apk add --no-cache tar git openssh-client jq curl && \
     pip install awscli boto yamllint && \
     true
 
